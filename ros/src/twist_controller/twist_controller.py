@@ -48,9 +48,9 @@ class Controller(object):
             1
         )
         self.steer_pid = PID(
-            0.5,
-            0.0,
             1.5,
+            0.0,
+            4.0,
             -params['max_steer_angle'],
             params['max_steer_angle']
         )
