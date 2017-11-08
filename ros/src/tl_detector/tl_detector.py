@@ -9,11 +9,10 @@ from sensor_msgs.msg import Image
 from std_msgs.msg import Int32
 from styx_msgs.msg import Lane
 from styx_msgs.msg import TrafficLightArray, TrafficLight
+import rosnode
 import rospy
 import yaml
 
-# Use state from traffic lights topic.
-USE_GROUND_TRUTH = False
 # Min distance (in waypoints) when to start detecting traffic light.
 LIGHT_DETECTION_DISTANCE = 200
 # Number of detection before a state change is accepted.
@@ -25,13 +24,14 @@ class TLDetector(object):
     def __init__(self):
         rospy.init_node('tl_detector')
 
-        self.use_ground_truth = USE_GROUND_TRUTH
+        node_names = rosnode.get_node_names()
+        self.use_ground_truth = True if '/styx_server' in node_names else False
 
         # Traffic light classifier's thread and its task queue.
         self.image_processing = False
         self.queue = Queue()
         self.light_classifier = TLClassifier(self.queue, self.classified_cb)
-        if not USE_GROUND_TRUTH:
+        if not self.use_ground_truth:
             self.light_classifier.daemon = True
             self.light_classifier.start()
 
