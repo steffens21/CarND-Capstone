@@ -30,8 +30,8 @@ class TLDetector(object):
         # Traffic light classifier's thread and its task queue.
         self.image_processing = False
         self.queue = Queue()
-        self.light_classifier = TLClassifier(self.queue, self.classified_cb)
         if not self.use_ground_truth:
+            self.light_classifier = TLClassifier(self.queue, self.classified_cb)
             self.light_classifier.daemon = True
             self.light_classifier.start()
 
